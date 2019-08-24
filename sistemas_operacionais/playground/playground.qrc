@@ -1,0 +1,21 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/kid_0.png</file>
+        <file>images/kid_1.png</file>
+        <file>images/kid_2.png</file>
+        <file>images/kid_3.png</file>
+        <file>images/kid_4.png</file>
+        <file>images/kid_5.png</file>
+        <file>images/kid_6.png</file>
+        <file>images/kid_7.png</file>
+        <file>images/background.jpg</file>
+        <file>images/empty_bucket.png</file>
+        <file>images/bucket_five_ball.png</file>
+        <file>images/bucket_four_ball.png</file>
+        <file>images/bucket_one_ball.png</file>
+        <file>images/bucket_seven_ball.png</file>
+        <file>images/bucket_six_ball.png</file>
+        <file>images/bucket_three_ball.png</file>
+        <file>images/bucket_two_ball.png</file>
+    </qresource>
+</RCC>
