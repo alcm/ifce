@@ -2,6 +2,7 @@
 #define CHILD_H_
 
 #include <QObject>
+#include <QGraphicsPixmapItem>
 #include <QPoint>
 
 #include <cstdint>
@@ -11,7 +12,7 @@
 #include "bucket.h"
 #include "logger.h"
 
-class Child : public QObject
+class Child : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:
@@ -23,10 +24,11 @@ public:
 
     const Logger *log_handler() const;
 
+    int id() const;
+
 signals:
-    void SetChildPosition(const int id, const QPoint &point);
-    void RefreshChild(const int id);
-    void DrawChild(const int id, const QPoint &point);
+    void SetPosition(const int id, const QPoint &point);
+    void Repaint(const int id, const std::string &img_path);
 
 private:
     void Play();
@@ -38,9 +40,9 @@ private:
     uint8_t quiet_time_;
     uint8_t id_;
     bool has_ball_;
-    std::string status_;
     std::shared_ptr<Bucket> bucket_;
     std::vector<QPoint> path_to_bucket_;
+    const std::vector<std::string> images_;
     Logger log_handler_;
 };
 

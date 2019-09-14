@@ -12,6 +12,10 @@ public:
         futures_.reserve(size);
     }
 
+    ~ThreadPool()
+    {
+    }
+
     void EnqueueTask(const std::function<void()> &cb)
     {
         futures_.emplace_back(std::async(std::launch::async, cb));

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1039</width>
-    <height>588</height>
+    <width>1459</width>
+    <height>871</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -17,11 +17,17 @@
    <widget class="QPushButton" name="create_child_button_">
     <property name="geometry">
      <rect>
-      <x>80</x>
-      <y>32</y>
-      <width>141</width>
+      <x>10</x>
+      <y>10</y>
+      <width>151</width>
       <height>41</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Monospace</family>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Adicionar criança</string>
@@ -30,11 +36,17 @@
    <widget class="QCheckBox" name="has_ball_checkbox_">
     <property name="geometry">
      <rect>
-      <x>210</x>
-      <y>110</y>
-      <width>85</width>
+      <x>170</x>
+      <y>20</y>
+      <width>91</width>
       <height>21</height>
      </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Monospace</family>
+      <pointsize>10</pointsize>
+     </font>
     </property>
     <property name="text">
      <string>Tem bola?</string>
@@ -43,9 +55,9 @@
    <widget class="QLineEdit" name="play_interval_line_edit_">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>90</y>
-      <width>113</width>
+      <x>230</x>
+      <y>60</y>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -53,9 +65,9 @@
    <widget class="QLineEdit" name="quiet_interval_line_edit_">
     <property name="geometry">
      <rect>
-      <x>470</x>
-      <y>130</y>
-      <width>113</width>
+      <x>70</x>
+      <y>60</y>
+      <width>91</width>
       <height>31</height>
      </rect>
     </property>
@@ -63,11 +75,66 @@
    <widget class="QTextEdit" name="log_text_edit_">
     <property name="geometry">
      <rect>
-      <x>70</x>
-      <y>330</y>
-      <width>761</width>
-      <height>181</height>
+      <x>10</x>
+      <y>100</y>
+      <width>311</width>
+      <height>741</height>
      </rect>
+    </property>
+   </widget>
+   <widget class="QWidget" name="verticalLayoutWidget">
+    <property name="geometry">
+     <rect>
+      <x>330</x>
+      <y>10</y>
+      <width>1121</width>
+      <height>831</height>
+     </rect>
+    </property>
+    <layout class="QVBoxLayout" name="layout_"/>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>65</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Monospace</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tempo quieta (tempo que a criança fica quieta após colocar a bola no cesto) em segundos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string>Tq (s):</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>170</x>
+      <y>65</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Monospace</family>
+      <pointsize>10</pointsize>
+     </font>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tempo de brincadeira (tempo que a criança fica brincando com a bola) em segundos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+    <property name="text">
+     <string>Tb (s):</string>
     </property>
    </widget>
   </widget>
@@ -76,11 +143,33 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1039</width>
-     <height>20</height>
+     <width>1459</width>
+     <height>22</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <family>Monospace</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
+   <widget class="QMenu" name="menuSobre">
+    <property name="title">
+     <string>Sobre</string>
+    </property>
+   </widget>
+   <addaction name="menuSobre"/>
   </widget>
+  <action name="actionAdicionar_crian_a">
+   <property name="text">
+    <string>Adicionar criança</string>
+   </property>
+  </action>
+  <action name="actionSair">
+   <property name="text">
+    <string>Sair</string>
+   </property>
+  </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
  <resources/>

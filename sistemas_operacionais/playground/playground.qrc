@@ -1,0 +1,14 @@
+<RCC>
+    <qresource prefix="/images">
+        <file>images/kid_0.png</file>
+        <file>images/kid_1.png</file>
+        <file>images/kid_2.png</file>
+        <file>images/kid_3.png</file>
+        <file>images/kid_4.png</file>
+        <file>images/kid_5.png</file>
+        <file>images/kid_6.png</file>
+        <file>images/kid_7.png</file>
+        <file>images/background.jpg</file>
+        <file>images/ball_barrel.png</file>
+    </qresource>
+</RCC>
