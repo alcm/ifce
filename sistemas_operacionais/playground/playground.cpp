@@ -13,6 +13,9 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
       view_(&scene_),
       ui_(new Ui::Playground)
 {
+    if (!bucket_capacity)
+        throw std::invalid_argument("Capacidade do cesto inválida.");
+
     ui_->setupUi(this);
     ui_->layout_->addWidget(&view_);
 
