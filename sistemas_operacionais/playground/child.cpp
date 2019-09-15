@@ -14,7 +14,9 @@ Child::Child(const int id, const int play_time, const int quiet_time,
                ":/images/images/kid_5.png", ":/images/images/kid_6.png",
                ":/images/images/kid_7.png"})
 {
-
+    setToolTip(QString::fromStdString("ID: " + std::to_string(id_) + ", Tq: "
+                                      + std::to_string(quiet_time_) + ", Tb: "
+                                      + std::to_string(play_time_)));
 }
 
 void Child::MainThread()
