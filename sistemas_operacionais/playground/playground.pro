@@ -27,18 +27,21 @@ CONFIG += c++11
 SOURCES += \
         app.cpp \
         bucket.cpp \
+        bucket_size_dialog.cpp \
         child.cpp \
         logger.cpp \
         playground.cpp
 
 HEADERS += \
         bucket.h \
+        bucket_size_dialog.h \
         child.h \
         logger.h \
         playground.h \
         thread_pool.h
 
 FORMS += \
+        bucket_size_dialog.ui \
         playground.ui
 
 # Default rules for deployment.

@@ -5,10 +5,10 @@
 
 #include <functional>
 
-Playground::Playground(QWidget *parent)
+Playground::Playground(const int bucket_capacity, QWidget *parent)
     : QMainWindow(parent),
       bucket_(std::make_shared<Bucket>(kPlaygroundCapacity_)),
-      kPlaygroundCapacity_(5),
+      kPlaygroundCapacity_(bucket_capacity),
       pool_(kPlaygroundCapacity_),
       view_(&scene_),
       ui_(new Ui::Playground)
@@ -37,21 +37,21 @@ Playground::Playground(QWidget *parent)
                                                        QPoint(50,  540), QPoint(100, 540),
                                                        QPoint(150, 540), QPoint(200, 540),
                                                        QPoint(250, 540), QPoint(300, 540) }) });
-    paths_to_bucket_.insert({ 1, std::vector<QPoint>({ QPoint(150,  350), QPoint(175,  380),
-                                                       QPoint(200,  410), QPoint(225,  440),
-                                                       QPoint(250,  470), QPoint(275, 500),
-                                                       QPoint(300, 530), QPoint(325, 560) }) });
-    paths_to_bucket_.insert({ 2, std::vector<QPoint>({ QPoint(380,  350), QPoint(380, 380),
-                                                       QPoint(380, 420) }) });
-    paths_to_bucket_.insert({ 3, std::vector<QPoint>({ QPoint(600,  350), QPoint(590, 380),
-                                                       QPoint(580,  410), QPoint(570,  440),
-                                                       QPoint(560,  470), QPoint(550, 500),
-                                                       QPoint(540, 530), QPoint(530, 560) }) });
-    paths_to_bucket_.insert({ 4, std::vector<QPoint>({ QPoint(800,  450), QPoint(800, 480),
+    paths_to_bucket_.insert({ 1, std::vector<QPoint>({ QPoint(800,  450), QPoint(800, 480),
                                                        QPoint(800,   510), QPoint(800,   540),
                                                        QPoint(750,  540), QPoint(700, 540),
                                                        QPoint(650, 540), QPoint(600, 540),
                                                        QPoint(550, 540), QPoint(500, 540) }) });
+    paths_to_bucket_.insert({ 2, std::vector<QPoint>({ QPoint(380,  350), QPoint(380, 380),
+                                                       QPoint(380, 420) }) });
+    paths_to_bucket_.insert({ 3, std::vector<QPoint>({ QPoint(150,  350), QPoint(175,  380),
+                                                       QPoint(200,  410), QPoint(225,  440),
+                                                       QPoint(250,  470), QPoint(275, 500),
+                                                       QPoint(300, 530), QPoint(325, 560) }) });
+    paths_to_bucket_.insert({ 4, std::vector<QPoint>({ QPoint(600,  350), QPoint(590, 380),
+                                                       QPoint(580,  410), QPoint(570,  440),
+                                                       QPoint(560,  470), QPoint(550, 500),
+                                                       QPoint(540, 530), QPoint(530, 560) }) });
 
     QObject::connect(ui_->create_child_button_, SIGNAL(clicked()), this,
                      SLOT(OnAddChildButtonClicked()));

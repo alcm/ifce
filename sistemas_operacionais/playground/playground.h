@@ -23,7 +23,7 @@ class Playground : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit Playground(QWidget *parent = nullptr);
+    Playground(const int bucket_capacity, QWidget *parent = nullptr);
     ~Playground();
 
 public slots:

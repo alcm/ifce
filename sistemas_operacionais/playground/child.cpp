@@ -19,6 +19,8 @@ Child::Child(const int id, const int play_time, const int quiet_time,
 
 void Child::MainThread()
 {
+    emit Repaint(id_, has_ball_ ? images_.at(2) : images_.at(0));
+
     while (1) {
         StayQuiet();
 
@@ -65,7 +67,6 @@ void Child::StayQuiet()
     std::chrono::time_point<std::chrono::steady_clock> start, now;
 
     log_handler_.Log("A criança " + std::to_string(id_) + " está quieta.");
-    emit Repaint(id_, images_.front());
 
     start = std::chrono::steady_clock::now();
     while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < quiet_time_)
