@@ -37,7 +37,7 @@ private slots:
 private:
     void InstallSignals(Child *child);
     void UninstallSignals(Child *child);
-    void CreateChild(const int id, const int play_time, const int quiet_time, const bool has_ball);
+    void CreateChild(const int id, const std::string &name, const int play_time, const int quiet_time, const bool has_ball);
     void DrawChild(Child *ch);
 
     std::shared_ptr<Bucket> bucket_;

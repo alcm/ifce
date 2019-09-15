@@ -17,7 +17,7 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
         throw std::invalid_argument("Capacidade do cesto inválida.");
 
     ui_->setupUi(this);
-    ui_->layout_->addWidget(&view_);
+    ui_->layout->addWidget(&view_);
 
     // Draw background
     auto bg_img = new QGraphicsPixmapItem(QPixmap(":/images/images/background.jpg"));
@@ -56,7 +56,7 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
                                                        QPoint(560,  470), QPoint(550, 500),
                                                        QPoint(540, 530), QPoint(530, 560) }) });
 
-    QObject::connect(ui_->create_child_button_, SIGNAL(clicked()), this,
+    QObject::connect(ui_->create_child_button, SIGNAL(clicked()), this,
                      SLOT(OnAddChildButtonClicked()));
 }
 
@@ -69,7 +69,7 @@ Playground::~Playground()
         delete ch;
     }
 
-    QObject::disconnect(ui_->create_child_button_, SIGNAL(clicked()), this,
+    QObject::disconnect(ui_->create_child_button, SIGNAL(clicked()), this,
                         SLOT(OnAddChildButtonClicked()));
 
     delete ui_;
@@ -98,19 +98,21 @@ void Playground::UninstallSignals(Child *child)
 void Playground::OnAddChildButtonClicked()
 {
     int id = static_cast<int>(childs_.size());
-    int play_time = ui_->play_interval_line_edit_->text().toInt();
-    int quiet_time = ui_->quiet_interval_line_edit_->text().toInt();
-    bool has_ball = ui_->has_ball_checkbox_->isChecked();
+    std::string name = ui_->id_line_edit->text().isEmpty() ? std::to_string(id)
+                                                           : ui_->id_line_edit->text().toStdString();
+    int play_time = ui_->play_interval_line_edit->text().toInt();
+    int quiet_time = ui_->quiet_interval_line_edit->text().toInt();
+    bool has_ball = ui_->has_ball_checkbox->isChecked();
 
     if (childs_.size() < kPlaygroundCapacity_)
-        CreateChild(id, play_time, quiet_time, has_ball);
+        CreateChild(id, name, play_time, quiet_time, has_ball);
 }
 
 void Playground::DrawChild(Child *ch)
 {
     std::lock_guard<std::mutex> lk(child_mutex_);
 
-    auto start_pos = paths_to_bucket_.at(ch->id()).front();
+    auto start_pos = paths_to_bucket_.at(childs_.size()).front();
 
     scene_.addItem(ch);
     childs_.insert({ ch->id(), ch });
@@ -139,13 +141,13 @@ void Playground::LogMessage(const std::string &msg)
 {
     std::lock_guard<std::mutex> lk(log_mutex_);
 
-    ui_->log_text_edit_->append(QString::fromStdString(msg));
+    ui_->log_text_edit->append(QString::fromStdString(msg));
 }
 
-void Playground::CreateChild(const int id, const int play_time, const int quiet_time,
-                             const bool has_ball)
+void Playground::CreateChild(const int id, const std::string &name, const int play_time,
+                             const int quiet_time, const bool has_ball)
 {
-    Child *c = new Child(id, play_time, quiet_time, has_ball, paths_to_bucket_[id], bucket_);
+    Child *c = new Child(id, name, play_time, quiet_time, has_ball, paths_to_bucket_[id], bucket_);
 
     DrawChild(c);
     InstallSignals(c);
