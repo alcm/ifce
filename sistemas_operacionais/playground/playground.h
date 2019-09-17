@@ -26,17 +26,16 @@ public:
     Playground(const int bucket_capacity = 0, QWidget *parent = nullptr);
     ~Playground();
 
-public slots:
-    void SetChildPosition(const int id, const QPoint &point);
-    void RepaintChild(const int id, const std::string &img_path);
-    void LogMessage(const std::string &msg);
-
 private slots:
     void OnAddChildButtonClicked();
+    void SetChildPosition(const int id, const QPoint &point);
+    void RepaintChild(const int id, const std::string &img_path);
+    void RepaintBucket(const std::string &img_path);
+    void LogMessage(const std::string &msg);
 
 private:
-    void InstallSignals(Child *child);
-    void UninstallSignals(Child *child);
+    void InstallChildSignals(Child *child);
+    void UninstallChildSignals(Child *child);
     void CreateChild(const int id, const std::string &name, const int play_time, const int quiet_time, const bool has_ball);
     void DrawChild(Child *ch);
 
@@ -47,10 +46,12 @@ private:
     uint8_t kPlaygroundCapacity_;
     std::mutex log_mutex_;
     std::mutex child_mutex_;
+    std::mutex bucket_mutex_;
     ThreadPool pool_;
 
     QGraphicsScene scene_;
     QGraphicsView view_;
+    QGraphicsPixmapItem *bucket_img_;
     Ui::Playground *ui_;
 };
 

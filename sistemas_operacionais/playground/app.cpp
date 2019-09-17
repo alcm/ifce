@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
 
     dialog.exec();
 
-    int ret;
+    int ret = 1;
     try {
         Playground w(dialog.bucket_capacity());
 

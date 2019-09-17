@@ -2,6 +2,7 @@
 #include "ui_playground.h"
 
 #include <QGraphicsItem>
+#include <QMessageBox>
 
 #include <functional>
 
@@ -28,36 +29,38 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
     bg_img->setZValue(-0.1);
 
     // Draw bucket
-    auto bucket_img = new QGraphicsPixmapItem(QPixmap(":/images/images/ball_barrel.png"));
+    bucket_img_ = new QGraphicsPixmapItem(QPixmap(":/images/images/empty_bucket.png"));
 
-    scene_.addItem(bucket_img);
-    bucket_img->setPos(500, 680);
-    bucket_img->setScale(1.0);
-    bucket_img->setZValue(-0.1);
+    scene_.addItem(bucket_img_);
+    bucket_img_->setPos(440, 610);
+    bucket_img_->setScale(1.0);
+    bucket_img_->setZValue(-0.1);
 
     paths_to_bucket_.insert({ 0, std::vector<QPoint>({ QPoint(0,   450), QPoint(0,   480),
                                                        QPoint(0,   510), QPoint(0,   540),
                                                        QPoint(50,  540), QPoint(100, 540),
-                                                       QPoint(150, 540), QPoint(200, 540),
-                                                       QPoint(250, 540), QPoint(300, 540) }) });
-    paths_to_bucket_.insert({ 1, std::vector<QPoint>({ QPoint(800,  450), QPoint(800, 480),
-                                                       QPoint(800,   510), QPoint(800,   540),
-                                                       QPoint(750,  540), QPoint(700, 540),
+                                                       QPoint(150, 540), QPoint(170, 540),
+                                                       QPoint(250, 540), QPoint(280, 540) }) });
+    paths_to_bucket_.insert({ 1, std::vector<QPoint>({ QPoint(800, 430), QPoint(800, 480),
+                                                       QPoint(800, 510), QPoint(800, 540),
+                                                       QPoint(750, 540), QPoint(700, 540),
                                                        QPoint(650, 540), QPoint(600, 540),
-                                                       QPoint(550, 540), QPoint(500, 540) }) });
-    paths_to_bucket_.insert({ 2, std::vector<QPoint>({ QPoint(380,  350), QPoint(380, 380),
-                                                       QPoint(380, 420) }) });
-    paths_to_bucket_.insert({ 3, std::vector<QPoint>({ QPoint(150,  350), QPoint(175,  380),
-                                                       QPoint(200,  410), QPoint(225,  440),
-                                                       QPoint(250,  470), QPoint(275, 500),
+                                                       QPoint(550, 540), QPoint(545, 540) }) });
+    paths_to_bucket_.insert({ 2, std::vector<QPoint>({ QPoint(380, 340), QPoint(380, 380),
+                                                       QPoint(380, 385) }) });
+    paths_to_bucket_.insert({ 3, std::vector<QPoint>({ QPoint(140, 350), QPoint(175, 380),
+                                                       QPoint(200, 410), QPoint(225, 440),
+                                                       QPoint(250, 470), QPoint(265, 500),
                                                        QPoint(300, 530), QPoint(325, 560) }) });
-    paths_to_bucket_.insert({ 4, std::vector<QPoint>({ QPoint(600,  350), QPoint(590, 380),
-                                                       QPoint(580,  410), QPoint(570,  440),
-                                                       QPoint(560,  470), QPoint(550, 500),
+    paths_to_bucket_.insert({ 4, std::vector<QPoint>({ QPoint(600, 350), QPoint(590, 380),
+                                                       QPoint(580, 410), QPoint(570, 440),
+                                                       QPoint(560, 470), QPoint(550, 500),
                                                        QPoint(540, 530), QPoint(530, 560) }) });
 
     QObject::connect(ui_->create_child_button, SIGNAL(clicked()), this,
                      SLOT(OnAddChildButtonClicked()));
+    QObject::connect(bucket_.get(), SIGNAL(Repaint(const std::string &)), this,
+                     SLOT(RepaintBucket(const std::string &)));
 }
 
 Playground::~Playground()
@@ -65,17 +68,18 @@ Playground::~Playground()
     for (auto &entry : childs_) {
         auto ch = entry.second;
 
-        UninstallSignals(ch);
+        UninstallChildSignals(ch);
         delete ch;
     }
 
     QObject::disconnect(ui_->create_child_button, SIGNAL(clicked()), this,
                         SLOT(OnAddChildButtonClicked()));
 
+    delete bucket_img_;
     delete ui_;
 }
 
-void Playground::InstallSignals(Child *child)
+void Playground::InstallChildSignals(Child *child)
 {
     QObject::connect(child, SIGNAL(SetPosition(const int, const QPoint &)), this,
                      SLOT(SetChildPosition(const int, const QPoint &)));
@@ -85,7 +89,7 @@ void Playground::InstallSignals(Child *child)
                      SLOT(LogMessage(const std::string &)));
 }
 
-void Playground::UninstallSignals(Child *child)
+void Playground::UninstallChildSignals(Child *child)
 {
     QObject::disconnect(child, SIGNAL(SetPosition(const int, const QPoint &)), this,
                         SLOT(SetChildPosition(const int, const QPoint &)));
@@ -97,12 +101,17 @@ void Playground::UninstallSignals(Child *child)
 
 void Playground::OnAddChildButtonClicked()
 {
+    bool has_ball = ui_->has_ball_checkbox->isChecked();
+    int play_time = ui_->play_interval_line_edit->text().toInt();
+    int quiet_time = ui_->quiet_interval_line_edit->text().toInt();
     int id = static_cast<int>(childs_.size());
     std::string name = ui_->id_line_edit->text().isEmpty() ? std::to_string(id)
                                                            : ui_->id_line_edit->text().toStdString();
-    int play_time = ui_->play_interval_line_edit->text().toInt();
-    int quiet_time = ui_->quiet_interval_line_edit->text().toInt();
-    bool has_ball = ui_->has_ball_checkbox->isChecked();
+
+    if (!quiet_time || !play_time) {
+        QMessageBox::warning(this, "Erro", "Preencha os campos corretamente!");
+        return;
+    }
 
     if (childs_.size() < kPlaygroundCapacity_)
         CreateChild(id, name, play_time, quiet_time, has_ball);
@@ -137,6 +146,13 @@ void Playground::RepaintChild(const int id, const std::string &img_path)
         child->setPixmap(QPixmap(img_path.c_str()));
 }
 
+void Playground::RepaintBucket(const std::string &img_path)
+{
+    std::lock_guard<std::mutex> lk(bucket_mutex_);
+
+    bucket_img_->setPixmap(QPixmap(QString::fromStdString(img_path)));
+}
+
 void Playground::LogMessage(const std::string &msg)
 {
     std::lock_guard<std::mutex> lk(log_mutex_);
@@ -147,9 +163,9 @@ void Playground::LogMessage(const std::string &msg)
 void Playground::CreateChild(const int id, const std::string &name, const int play_time,
                              const int quiet_time, const bool has_ball)
 {
-    Child *c = new Child(id, name, play_time, quiet_time, has_ball, paths_to_bucket_[id], bucket_);
+    auto c = new Child(id, name, play_time, quiet_time, has_ball, paths_to_bucket_[id], bucket_);
 
     DrawChild(c);
-    InstallSignals(c);
+    InstallChildSignals(c);
     pool_.EnqueueTask(std::bind(&Child::MainThread, c));
 }

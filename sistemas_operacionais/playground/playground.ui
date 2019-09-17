@@ -133,7 +133,7 @@
      </font>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tempo quieta (tempo que a criança fica quieta após colocar a bola no cesto) em segundos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tempo quieta (tempo que a criança fica quieta após colocar a bola no cesto) em segundos. &lt;span style=&quot; font-weight:600;&quot;&gt;Este campo é obrigatório.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string>Tq (s):</string>
@@ -155,7 +155,7 @@
      </font>
     </property>
     <property name="toolTip">
-     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tempo de brincadeira (tempo que a criança fica brincando com a bola) em segundos&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Tempo de brincadeira (tempo que a criança fica brincando com a bola) em segundos. &lt;span style=&quot; font-weight:600;&quot;&gt;Este campo é obrigatório.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string>Tb (s):</string>
@@ -175,6 +175,9 @@
       <family>Monospace</family>
       <pointsize>10</pointsize>
      </font>
+    </property>
+    <property name="toolTip">
+     <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Identificador da criança. &lt;span style=&quot; font-weight:600;&quot;&gt;Este campo é opcional.&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
     </property>
     <property name="text">
      <string>ID: </string>
@@ -220,8 +223,9 @@
      </font>
     </property>
     <property name="title">
-     <string>Sobre</string>
+     <string>Ajuda</string>
     </property>
+    <addaction name="actionSobre"/>
    </widget>
    <addaction name="menuSobre"/>
   </widget>
@@ -233,6 +237,11 @@
   <action name="actionSair">
    <property name="text">
     <string>Sair</string>
+   </property>
+  </action>
+  <action name="actionSobre">
+   <property name="text">
+    <string>Sobre</string>
    </property>
   </action>
  </widget>
