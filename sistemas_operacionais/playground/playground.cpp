@@ -68,8 +68,8 @@ Playground::~Playground()
     for (auto &entry : childs_) {
         auto ch = entry.second;
 
+        ch->set_must_stop(true);
         UninstallChildSignals(ch);
-        delete ch;
     }
 
     QObject::disconnect(ui_->create_child_button, SIGNAL(clicked()), this,

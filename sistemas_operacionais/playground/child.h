@@ -1,8 +1,8 @@
 #ifndef CHILD_H_
 #define CHILD_H_
 
-#include <QObject>
 #include <QGraphicsPixmapItem>
+#include <QObject>
 #include <QPoint>
 
 #include <cstdint>
@@ -26,6 +26,8 @@ public:
 
     int id() const;
 
+    void set_must_stop(bool must_stop);
+
 signals:
     void SetPosition(const int id, const QPoint &point);
     void Repaint(const int id, const std::string &img_path);
@@ -36,6 +38,7 @@ private:
     void PickBall();
     void ReturnBall();
 
+    bool must_stop_;
     uint8_t play_time_;
     uint8_t quiet_time_;
     int id_;

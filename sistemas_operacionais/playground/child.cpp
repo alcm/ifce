@@ -6,8 +6,8 @@
 Child::Child(const int id, const std::string &name, const int play_time, const int quiet_time,
              const bool has_ball, const std::vector<QPoint> &path_to_bucket,
              std::shared_ptr<Bucket> b)
-    : id_(id), name_(name), play_time_(play_time), quiet_time_(quiet_time), has_ball_(has_ball),
-      path_to_bucket_(path_to_bucket), bucket_(b),
+    : must_stop_(false), id_(id), name_(name), play_time_(play_time), quiet_time_(quiet_time),
+      has_ball_(has_ball), path_to_bucket_(path_to_bucket), bucket_(b),
       images_({":/images/images/kid_0.png", ":/images/images/kid_1.png",
                ":/images/images/kid_2.png", ":/images/images/kid_3.png",
                ":/images/images/kid_4.png", ":/images/images/kid_4.png",
@@ -22,7 +22,7 @@ void Child::MainThread()
 {
     emit Repaint(id_, has_ball_ ? images_.at(2) : images_.at(0));
 
-    while (1) {
+    while (!must_stop_) {
         StayQuiet();
 
         if (!has_ball_)
@@ -116,4 +116,9 @@ void Child::ReturnBall()
         emit SetPosition(id_, path_to_bucket_.at(i));
         std::this_thread::sleep_for(std::chrono::milliseconds(100));
     }
+}
+
+void Child::set_must_stop(bool must_stop)
+{
+    must_stop_ = must_stop;
 }
