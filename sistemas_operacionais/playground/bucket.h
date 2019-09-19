@@ -8,6 +8,8 @@
 #include <map>
 #include <mutex>
 
+#include "semaphore.h"
+
 class Bucket : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
@@ -22,9 +24,9 @@ signals:
 
 private:
    std::mutex mutex_;
-   uint8_t n_balls_;
-   uint8_t capacity_;
 
+   Semaphore available_positions_sem_;
+   Semaphore available_balls_sem_;
    std::map<int, std::string> imgs_;
 };
 
