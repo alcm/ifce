@@ -58,6 +58,7 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
                      SLOT(OnAddChildButtonClicked()));
     QObject::connect(bucket_, SIGNAL(Repaint(const std::string &)), this,
                      SLOT(RepaintBucket(const std::string &)));
+    QObject::connect(ui_->actionSobre, SIGNAL(triggered()), this, SLOT(ShowAboutPopup()));
 }
 
 Playground::~Playground()
@@ -156,6 +157,27 @@ void Playground::LogMessage(const std::string &msg)
     std::lock_guard<std::mutex> lk(log_mutex_);
 
     ui_->log_text_edit->append(QString::fromStdString(msg));
+}
+
+void Playground::ShowAboutPopup()
+{
+    std::string text = "Trabalho de Sistemas operacionais\n\nImagine N crianças que estão, a princípio, quietas."
+                       " M (M < N) crianças inicialmente possuem uma bola e as outras, não. De "
+                       "repente, sentem vontade de brincar com uma bola. Com esse desejo "
+                       "incontrolável, as que já estão com a bola simplesmente brincam. As que não "
+                       " têm bola correm ao cesto de bolas, que está inicialmente vazio e que suporta"
+                       " até K bolas. Se o cesto possuir bolas, uma criança pega a bola e vai brincar"
+                       " feliz. Se o cesto estiver vazio, ela fica esperando até que outra criança "
+                       " coloque uma bola no cesto. Quando uma criança termina de brincar, ela tem "
+                       "que colocar a bola no cesto, mas se o cesto já estiver cheio, ela segura a "
+                       "bola até que outra criança retire uma bola que já está no cesto, e então "
+                       "solta sua bola no cesto e volta a ficar quieta. Admita que as crianças "
+                       "continuem brincando e descansando (quieta) eternamente. Utilizando semáforos,"
+                       " modele esse problema problema resolvendo os conflitos entre os N threads "
+                       "\"criança\".\n\nAluno: André Luis Carvalho Moreira\nDisponível em: "
+                       " github.com/carvalhudo/ifce/tree/sistemas_operacionais/sistemas_operacionais/playground";
+
+    QMessageBox::information(this, "Sobre", QString::fromStdString(text));
 }
 
 void Playground::CreateChild(const int id, const std::string &name, const int play_time,

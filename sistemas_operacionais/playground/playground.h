@@ -32,6 +32,7 @@ private slots:
     void RepaintChild(const int id, const std::string &img_path);
     void RepaintBucket(const std::string &img_path);
     void LogMessage(const std::string &msg);
+    void ShowAboutPopup();
 
 private:
     void InstallChildSignals(Child *child);

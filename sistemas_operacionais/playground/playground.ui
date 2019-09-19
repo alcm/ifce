@@ -243,6 +243,12 @@
    <property name="text">
     <string>Sobre</string>
    </property>
+   <property name="font">
+    <font>
+     <family>Monospace</family>
+     <pointsize>10</pointsize>
+    </font>
+   </property>
   </action>
  </widget>
  <layoutdefault spacing="6" margin="11"/>

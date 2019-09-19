@@ -51,7 +51,8 @@ void Child::Play()
 
     start = std::chrono::steady_clock::now();
     // 'play_time_ - 1' due the sleeps inside loop.
-    while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() <= (play_time_ - 1)) {
+    while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() <= (play_time_ - 1)
+           && !must_stop_) {
         for (int i = 1; i < images_.size(); i++) {
             emit Repaint(id_, images_.at(i));
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
@@ -70,7 +71,8 @@ void Child::StayQuiet()
     log_handler_.Log("A criança " + name_ + " está quieta.");
 
     start = std::chrono::steady_clock::now();
-    while (std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < quiet_time_)
+    while ((std::chrono::duration_cast<std::chrono::seconds>(now - start).count() < quiet_time_)
+           && !must_stop_)
         now = std::chrono::steady_clock::now();
 }
 
