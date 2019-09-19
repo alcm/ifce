@@ -1,13 +1,14 @@
 #ifndef BUCKET_H_
 #define BUCKET_H_
 
+#include <QGraphicsPixmapItem>
 #include <QObject>
 
 #include <cstdint>
 #include <map>
 #include <mutex>
 
-class Bucket : public QObject
+class Bucket : public QObject, public QGraphicsPixmapItem
 {
     Q_OBJECT
 public:

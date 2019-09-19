@@ -1,7 +1,8 @@
 #include "bucket.h"
 
 Bucket::Bucket(const uint8_t bucket_capacity)
-    : n_balls_(0), capacity_(bucket_capacity),
+    : QGraphicsPixmapItem(QPixmap(":/images/images/empty_bucket.png")),
+      n_balls_(0), capacity_(bucket_capacity),
       imgs_({ {0, ":/images/images/empty_bucket.png" },
               {1, ":/images/images/bucket_one_ball.png" },
               {2, ":/images/images/bucket_two_ball.png" },
@@ -12,11 +13,13 @@ Bucket::Bucket(const uint8_t bucket_capacity)
               {7, ":/images/images/bucket_seven_ball.png" }})
 {
     qRegisterMetaType<std::string>("std::string");
+    setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(n_balls_) + " bola(s)"));
 }
 
 void Bucket::Push()
 {
     n_balls_++;
+    setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(n_balls_) + " bola(s)"));
     // TODO: decrease full semaphore
     emit Repaint(imgs_.at(n_balls_));
 }
@@ -24,6 +27,7 @@ void Bucket::Push()
 void Bucket::Pull()
 {
     n_balls_--;
+    setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(n_balls_) + " bola(s)"));
     // TODO: decrease empty semaphore
     emit Repaint(imgs_.at(n_balls_));
 }

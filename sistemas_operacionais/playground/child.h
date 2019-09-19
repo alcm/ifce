@@ -18,7 +18,7 @@ class Child : public QObject, public QGraphicsPixmapItem
 public:
     Child(const int id, const std::string &name, const int play_time, const int quiet_time,
           const bool has_ball, const std::vector<QPoint> &path_to_bucket,
-          std::shared_ptr<Bucket> b);
+          Bucket *b);
 
     void MainThread();
 
@@ -44,7 +44,7 @@ private:
     int id_;
     std::string name_;
     bool has_ball_;
-    std::shared_ptr<Bucket> bucket_;
+    Bucket *bucket_;
     std::vector<QPoint> path_to_bucket_;
     const std::vector<std::string> images_;
     Logger log_handler_;

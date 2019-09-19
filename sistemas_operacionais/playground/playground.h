@@ -39,7 +39,6 @@ private:
     void CreateChild(const int id, const std::string &name, const int play_time, const int quiet_time, const bool has_ball);
     void DrawChild(Child *ch);
 
-    std::shared_ptr<Bucket> bucket_;
     std::map<int, Child *> childs_;
     std::map<int, std::vector<QPoint>> paths_to_bucket_;
 
@@ -47,11 +46,11 @@ private:
     std::mutex log_mutex_;
     std::mutex child_mutex_;
     std::mutex bucket_mutex_;
-    ThreadPool pool_;
+    Bucket *bucket_;
 
     QGraphicsScene scene_;
     QGraphicsView view_;
-    QGraphicsPixmapItem *bucket_img_;
+    ThreadPool pool_;
     Ui::Playground *ui_;
 };
 

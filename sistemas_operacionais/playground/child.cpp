@@ -5,7 +5,7 @@
 
 Child::Child(const int id, const std::string &name, const int play_time, const int quiet_time,
              const bool has_ball, const std::vector<QPoint> &path_to_bucket,
-             std::shared_ptr<Bucket> b)
+             Bucket *b)
     : must_stop_(false), id_(id), name_(name), play_time_(play_time), quiet_time_(quiet_time),
       has_ball_(has_ball), path_to_bucket_(path_to_bucket), bucket_(b),
       images_({":/images/images/kid_0.png", ":/images/images/kid_1.png",

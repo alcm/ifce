@@ -8,10 +8,10 @@
 
 Playground::Playground(const int bucket_capacity, QWidget *parent)
     : QMainWindow(parent),
-      bucket_(std::make_shared<Bucket>(kPlaygroundCapacity_)),
+      bucket_(new Bucket(bucket_capacity)),
       kPlaygroundCapacity_(bucket_capacity),
-      pool_(kPlaygroundCapacity_),
       view_(&scene_),
+      pool_(kPlaygroundCapacity_),
       ui_(new Ui::Playground)
 {
     if (!bucket_capacity)
@@ -28,13 +28,10 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
     bg_img->setScale(1.4);
     bg_img->setZValue(-0.1);
 
-    // Draw bucket
-    bucket_img_ = new QGraphicsPixmapItem(QPixmap(":/images/images/empty_bucket.png"));
-
-    scene_.addItem(bucket_img_);
-    bucket_img_->setPos(440, 610);
-    bucket_img_->setScale(1.0);
-    bucket_img_->setZValue(-0.1);
+    scene_.addItem(bucket_);
+    bucket_->setPos(440, 610);
+    bucket_->setScale(1.0);
+    bucket_->setZValue(-0.1);
 
     paths_to_bucket_.insert({ 0, std::vector<QPoint>({ QPoint(0,   450), QPoint(0,   480),
                                                        QPoint(0,   510), QPoint(0,   540),
@@ -59,7 +56,7 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
 
     QObject::connect(ui_->create_child_button, SIGNAL(clicked()), this,
                      SLOT(OnAddChildButtonClicked()));
-    QObject::connect(bucket_.get(), SIGNAL(Repaint(const std::string &)), this,
+    QObject::connect(bucket_, SIGNAL(Repaint(const std::string &)), this,
                      SLOT(RepaintBucket(const std::string &)));
 }
 
@@ -74,8 +71,9 @@ Playground::~Playground()
 
     QObject::disconnect(ui_->create_child_button, SIGNAL(clicked()), this,
                         SLOT(OnAddChildButtonClicked()));
+    QObject::disconnect(bucket_, SIGNAL(Repaint(const std::string &)), this,
+                        SLOT(RepaintBucket(const std::string &)));
 
-    delete bucket_img_;
     delete ui_;
 }
 
@@ -150,7 +148,7 @@ void Playground::RepaintBucket(const std::string &img_path)
 {
     std::lock_guard<std::mutex> lk(bucket_mutex_);
 
-    bucket_img_->setPixmap(QPixmap(QString::fromStdString(img_path)));
+    bucket_->setPixmap(QPixmap(QString::fromStdString(img_path)));
 }
 
 void Playground::LogMessage(const std::string &msg)
