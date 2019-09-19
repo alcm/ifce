@@ -18,15 +18,16 @@ public:
 
     void Push();
     void Pull();
+    void Destroy();
 
 signals:
     void Repaint(const std::string &img_path);
 
 private:
-   std::mutex mutex_;
-
    Semaphore available_positions_sem_;
    Semaphore available_balls_sem_;
+   std::mutex mutex_;
+
    std::map<int, std::string> imgs_;
 };
 

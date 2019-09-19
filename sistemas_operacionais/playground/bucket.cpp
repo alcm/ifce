@@ -36,3 +36,9 @@ void Bucket::Pull()
 
     available_positions_sem_.Up();
 }
+
+void Bucket::Destroy()
+{
+   available_balls_sem_.Up();
+   available_positions_sem_.Up();
+}

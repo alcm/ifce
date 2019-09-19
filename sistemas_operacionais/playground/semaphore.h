@@ -1,6 +1,7 @@
 #ifndef SEMAPHORE_H_
 #define SEMAPHORE_H_
 
+#include <atomic>
 #include <mutex>
 #include <condition_variable>
 
@@ -16,7 +17,7 @@ public:
 private:
     std::mutex mutex_;
     std::condition_variable cv_;
-    int count_;
+    std::atomic<int> count_;
 };
 
 #endif // SEMAPHORE_H_

@@ -43,16 +43,14 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
                                                        QPoint(750, 540), QPoint(700, 540),
                                                        QPoint(650, 540), QPoint(600, 540),
                                                        QPoint(550, 540), QPoint(545, 540) }) });
-    paths_to_bucket_.insert({ 2, std::vector<QPoint>({ QPoint(380, 340), QPoint(380, 380),
-                                                       QPoint(380, 385) }) });
+    paths_to_bucket_.insert({ 2, std::vector<QPoint>({ QPoint(400, 340), QPoint(400, 380),
+                                                       QPoint(400, 385) }) });
     paths_to_bucket_.insert({ 3, std::vector<QPoint>({ QPoint(140, 350), QPoint(175, 380),
                                                        QPoint(200, 410), QPoint(225, 440),
-                                                       QPoint(250, 470), QPoint(265, 500),
-                                                       QPoint(300, 530), QPoint(325, 560) }) });
+                                                       QPoint(270, 450) }) });
     paths_to_bucket_.insert({ 4, std::vector<QPoint>({ QPoint(600, 350), QPoint(590, 380),
                                                        QPoint(580, 410), QPoint(570, 440),
-                                                       QPoint(560, 470), QPoint(550, 500),
-                                                       QPoint(540, 530), QPoint(530, 560) }) });
+                                                       QPoint(570, 450) }) });
 
     QObject::connect(ui_->create_child_button, SIGNAL(clicked()), this,
                      SLOT(OnAddChildButtonClicked()));
@@ -63,6 +61,8 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
 
 Playground::~Playground()
 {
+    bucket_->Destroy();
+
     for (auto &entry : childs_) {
         auto ch = entry.second;
 
