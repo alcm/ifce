@@ -14,6 +14,8 @@ public:
 
     ~ThreadPool()
     {
+        for (auto &entry : futures_)
+            entry.get();
     }
 
     void EnqueueTask(const std::function<void()> &cb)

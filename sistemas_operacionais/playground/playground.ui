@@ -105,6 +105,9 @@
       <pointsize>10</pointsize>
      </font>
     </property>
+    <property name="readOnly">
+     <bool>true</bool>
+    </property>
    </widget>
    <widget class="QWidget" name="verticalLayoutWidget">
     <property name="geometry">
@@ -226,6 +229,7 @@
      <string>Ajuda</string>
     </property>
     <addaction name="actionSobre"/>
+    <addaction name="actionSair_2"/>
    </widget>
    <addaction name="menuSobre"/>
   </widget>
@@ -248,6 +252,11 @@
      <family>Monospace</family>
      <pointsize>10</pointsize>
     </font>
+   </property>
+  </action>
+  <action name="actionSair_2">
+   <property name="text">
+    <string>Sair</string>
    </property>
   </action>
  </widget>

@@ -3,12 +3,11 @@
 
 #include <QGraphicsPixmapItem>
 #include <QObject>
+#include <QSemaphore>
 
 #include <cstdint>
 #include <map>
 #include <mutex>
-
-#include "semaphore.h"
 
 class Bucket : public QObject, public QGraphicsPixmapItem
 {
@@ -24,8 +23,9 @@ signals:
     void Repaint(const std::string &img_path);
 
 private:
-   Semaphore available_positions_sem_;
-   Semaphore available_balls_sem_;
+   QSemaphore available_positions_sem_;
+   QSemaphore available_balls_sem_;
+
    std::mutex mutex_;
 
    std::map<int, std::string> imgs_;

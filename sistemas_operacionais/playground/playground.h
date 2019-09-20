@@ -43,14 +43,14 @@ private:
     std::map<int, Child *> childs_;
     std::map<int, std::vector<QPoint>> paths_to_bucket_;
 
-    uint8_t kPlaygroundCapacity_;
+    uint8_t kMaxPlayers_;
     std::mutex log_mutex_;
     std::mutex child_mutex_;
     std::mutex bucket_mutex_;
-    Bucket *bucket_;
 
     QGraphicsScene scene_;
     QGraphicsView view_;
+    Bucket *bucket_;
     ThreadPool pool_;
     Ui::Playground *ui_;
 };

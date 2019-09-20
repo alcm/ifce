@@ -9,9 +9,9 @@
 Playground::Playground(const int bucket_capacity, QWidget *parent)
     : QMainWindow(parent),
       bucket_(new Bucket(bucket_capacity)),
-      kPlaygroundCapacity_(bucket_capacity),
+      kMaxPlayers_(5),
       view_(&scene_),
-      pool_(kPlaygroundCapacity_),
+      pool_(kMaxPlayers_),
       ui_(new Ui::Playground)
 {
     if (!bucket_capacity)
@@ -33,24 +33,24 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
     bucket_->setScale(1.0);
     bucket_->setZValue(-0.1);
 
-    paths_to_bucket_.insert({ 0, std::vector<QPoint>({ QPoint(0,   450), QPoint(0,   480),
+    paths_to_bucket_.insert({ 0, std::vector<QPoint>({ QPoint(400, 340), QPoint(400, 380),
+                                                       QPoint(400, 385) }) });
+    paths_to_bucket_.insert({ 1, std::vector<QPoint>({ QPoint(140, 350), QPoint(175, 380),
+                                                       QPoint(200, 410), QPoint(225, 440),
+                                                       QPoint(270, 450) }) });
+    paths_to_bucket_.insert({ 2, std::vector<QPoint>({ QPoint(600, 350), QPoint(590, 380),
+                                                       QPoint(580, 410), QPoint(570, 440),
+                                                       QPoint(570, 450) }) });
+    paths_to_bucket_.insert({ 3, std::vector<QPoint>({ QPoint(0,   450), QPoint(0,   480),
                                                        QPoint(0,   510), QPoint(0,   540),
                                                        QPoint(50,  540), QPoint(100, 540),
                                                        QPoint(150, 540), QPoint(170, 540),
                                                        QPoint(250, 540), QPoint(280, 540) }) });
-    paths_to_bucket_.insert({ 1, std::vector<QPoint>({ QPoint(800, 430), QPoint(800, 480),
+    paths_to_bucket_.insert({ 4, std::vector<QPoint>({ QPoint(800, 430), QPoint(800, 480),
                                                        QPoint(800, 510), QPoint(800, 540),
                                                        QPoint(750, 540), QPoint(700, 540),
                                                        QPoint(650, 540), QPoint(600, 540),
                                                        QPoint(550, 540), QPoint(545, 540) }) });
-    paths_to_bucket_.insert({ 2, std::vector<QPoint>({ QPoint(400, 340), QPoint(400, 380),
-                                                       QPoint(400, 385) }) });
-    paths_to_bucket_.insert({ 3, std::vector<QPoint>({ QPoint(140, 350), QPoint(175, 380),
-                                                       QPoint(200, 410), QPoint(225, 440),
-                                                       QPoint(270, 450) }) });
-    paths_to_bucket_.insert({ 4, std::vector<QPoint>({ QPoint(600, 350), QPoint(590, 380),
-                                                       QPoint(580, 410), QPoint(570, 440),
-                                                       QPoint(570, 450) }) });
 
     QObject::connect(ui_->create_child_button, SIGNAL(clicked()), this,
                      SLOT(OnAddChildButtonClicked()));
@@ -61,14 +61,14 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
 
 Playground::~Playground()
 {
-    bucket_->Destroy();
-
     for (auto &entry : childs_) {
         auto ch = entry.second;
 
         ch->set_must_stop(true);
         UninstallChildSignals(ch);
     }
+
+    bucket_->Destroy();
 
     QObject::disconnect(ui_->create_child_button, SIGNAL(clicked()), this,
                         SLOT(OnAddChildButtonClicked()));
@@ -112,7 +112,7 @@ void Playground::OnAddChildButtonClicked()
         return;
     }
 
-    if (childs_.size() < kPlaygroundCapacity_)
+    if (childs_.size() < kMaxPlayers_)
         CreateChild(id, name, play_time, quiet_time, has_ball);
 }
 

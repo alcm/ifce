@@ -30,8 +30,7 @@ SOURCES += \
         bucket_size_dialog.cpp \
         child.cpp \
         logger.cpp \
-        playground.cpp \
-        semaphore.cpp
+        playground.cpp
 
 HEADERS += \
         bucket.h \
@@ -39,7 +38,6 @@ HEADERS += \
         child.h \
         logger.h \
         playground.h \
-        semaphore.h \
         thread_pool.h
 
 FORMS += \
