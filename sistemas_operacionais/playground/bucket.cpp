@@ -4,6 +4,7 @@ Bucket::Bucket(const uint8_t bucket_capacity)
     : QGraphicsPixmapItem(QPixmap(":/images/images/empty_bucket.png")),
       available_positions_sem_(bucket_capacity),
       available_balls_sem_(0),
+      stop_(false),
       imgs_({ {0, ":/images/images/empty_bucket.png" },
               {1, ":/images/images/bucket_one_ball.png" },
               {2, ":/images/images/bucket_two_ball.png" },
@@ -21,8 +22,10 @@ void Bucket::Push()
 {
     available_positions_sem_.acquire();
 
-    setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(available_balls_sem_.available() + 1) + " bola(s)"));
-    emit Repaint(imgs_.at(available_balls_sem_.available() + 1));
+    if (!stop_) {
+        setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(available_balls_sem_.available() + 1) + " bola(s)"));
+        emit Repaint(imgs_.at(available_balls_sem_.available() + 1));
+    }
 
     available_balls_sem_.release();
 }
@@ -31,14 +34,17 @@ void Bucket::Pull()
 {
     available_balls_sem_.acquire();
 
-    setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(available_balls_sem_.available()) + " bola(s)"));
-    emit Repaint(imgs_.at(available_balls_sem_.available()));
+    if (!stop_) {
+        setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(available_balls_sem_.available()) + " bola(s)"));
+        emit Repaint(imgs_.at(available_balls_sem_.available()));
+    }
 
     available_positions_sem_.release();
 }
 
 void Bucket::Destroy()
 {
-   available_balls_sem_.release(5);
-   available_positions_sem_.release(5);
+    stop_ = true;
+    available_balls_sem_.release(5);
+    available_positions_sem_.release(5);
 }

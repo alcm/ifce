@@ -10,8 +10,9 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
     : QMainWindow(parent),
       bucket_(new Bucket(bucket_capacity)),
       kMaxPlayers_(5),
-      view_(&scene_),
-      pool_(kMaxPlayers_),
+      scene_(new QGraphicsScene),
+      view_(scene_),
+      pool_(new ThreadPool(kMaxPlayers_)),
       ui_(new Ui::Playground)
 {
     if (!bucket_capacity)
@@ -23,12 +24,12 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
     // Draw background
     auto bg_img = new QGraphicsPixmapItem(QPixmap(":/images/images/background.jpg"));
 
-    scene_.addItem(bg_img);
+    scene_->addItem(bg_img);
     bg_img->setPos(0, 0);
     bg_img->setScale(1.4);
     bg_img->setZValue(-0.1);
 
-    scene_.addItem(bucket_);
+    scene_->addItem(bucket_);
     bucket_->setPos(440, 610);
     bucket_->setScale(1.0);
     bucket_->setZValue(-0.1);
@@ -57,24 +58,18 @@ Playground::Playground(const int bucket_capacity, QWidget *parent)
     QObject::connect(bucket_, SIGNAL(Repaint(const std::string &)), this,
                      SLOT(RepaintBucket(const std::string &)));
     QObject::connect(ui_->actionSobre, SIGNAL(triggered()), this, SLOT(ShowAboutPopup()));
+    QObject::connect(ui_->actionSair_2, SIGNAL(triggered()), this, SLOT(Exit()));
 }
 
 Playground::~Playground()
 {
-    for (auto &entry : childs_) {
-        auto ch = entry.second;
-
-        ch->set_must_stop(true);
-        UninstallChildSignals(ch);
-    }
-
-    bucket_->Destroy();
-
     QObject::disconnect(ui_->create_child_button, SIGNAL(clicked()), this,
                         SLOT(OnAddChildButtonClicked()));
-    QObject::disconnect(bucket_, SIGNAL(Repaint(const std::string &)), this,
-                        SLOT(RepaintBucket(const std::string &)));
+    QObject::disconnect(ui_->actionSobre, SIGNAL(triggered()), this, SLOT(ShowAboutPopup()));
+    QObject::disconnect(ui_->actionSair_2, SIGNAL(triggered()), this, SLOT(Exit()));
 
+    delete scene_;
+    delete pool_;
     delete ui_;
 }
 
@@ -84,6 +79,7 @@ void Playground::InstallChildSignals(Child *child)
                      SLOT(SetChildPosition(const int, const QPoint &)));
     QObject::connect(child, SIGNAL(Repaint(const int, const std::string &)), this,
                      SLOT(RepaintChild(const int, const std::string &)));
+    QObject::connect(child, SIGNAL(Finished(const int)), this, SLOT(HandleChildThreadFinished(const int)));
     QObject::connect(child->log_handler(), SIGNAL(SendMsg(const std::string &)), this,
                      SLOT(LogMessage(const std::string &)));
 }
@@ -94,6 +90,7 @@ void Playground::UninstallChildSignals(Child *child)
                         SLOT(SetChildPosition(const int, const QPoint &)));
     QObject::disconnect(child, SIGNAL(Repaint(const int, const std::string &)), this,
                         SLOT(RepaintChild(const int, const std::string &)));
+    QObject::disconnect(child, SIGNAL(Finished(const int)), this, SLOT(HandleChildThreadFinished(const int)));
     QObject::disconnect(child->log_handler(), SIGNAL(SendMsg(const std::string &)), this,
                         SLOT(LogMessage(const std::string &)));
 }
@@ -122,7 +119,7 @@ void Playground::DrawChild(Child *ch)
 
     auto start_pos = paths_to_bucket_.at(childs_.size()).front();
 
-    scene_.addItem(ch);
+    scene_->addItem(ch);
     childs_.insert({ ch->id(), ch });
     ch->setPos(start_pos.x(), start_pos.y());
 }
@@ -159,6 +156,42 @@ void Playground::LogMessage(const std::string &msg)
     ui_->log_text_edit->append(QString::fromStdString(msg));
 }
 
+void Playground::Exit()
+{
+    if (!childs_.empty()) {
+        QObject::disconnect(bucket_, SIGNAL(Repaint(const std::string &)), this,
+                            SLOT(RepaintBucket(const std::string &)));
+        for (auto &entry : childs_) {
+            auto ch = entry.second;
+
+            ch->set_must_stop(true);
+            QObject::disconnect(ch, SIGNAL(SetPosition(const int, const QPoint &)), this,
+                                SLOT(SetChildPosition(const int, const QPoint &)));
+            QObject::disconnect(ch, SIGNAL(Repaint(const int, const std::string &)), this,
+                                SLOT(RepaintChild(const int, const std::string &)));
+            QObject::disconnect(ch->log_handler(), SIGNAL(SendMsg(const std::string &)), this,
+                                SLOT(LogMessage(const std::string &)));
+        }
+
+        bucket_->Destroy();
+    } else
+        close();
+}
+
+void Playground::HandleChildThreadFinished(const int id)
+{
+    std::lock_guard<std::mutex> lk(child_mutex_);
+
+    auto child = childs_.at(id);
+    if (child) {
+        QObject::disconnect(child, SIGNAL(Finished(const int)), this, SLOT(HandleChildThreadFinished(const int)));
+        childs_.erase(id);
+    }
+
+    if (childs_.empty())
+        close();
+}
+
 void Playground::ShowAboutPopup()
 {
     std::string text = "Trabalho de Sistemas operacionais\n\nImagine N crianças que estão, a princípio, quietas."
@@ -187,5 +220,5 @@ void Playground::CreateChild(const int id, const std::string &name, const int pl
 
     DrawChild(c);
     InstallChildSignals(c);
-    pool_.EnqueueTask(std::bind(&Child::MainThread, c));
+    pool_->EnqueueTask(std::bind(&Child::MainThread, c));
 }

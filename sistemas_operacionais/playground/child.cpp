@@ -29,8 +29,11 @@ void Child::MainThread()
             PickBall();
 
         Play();
-        ReturnBall();
+        if (!must_stop_)
+            ReturnBall();
     }
+
+    emit Finished(id_);
 }
 
 const Logger *Child::log_handler() const
@@ -87,14 +90,16 @@ void Child::PickBall()
     }
 
     bucket_->Pull();
-    has_ball_ = true;
+    if (!must_stop_) {
+        has_ball_ = true;
 
-    log_handler_.Log("A criança " + name_ + " pegou a bola.");
+        log_handler_.Log("A criança " + name_ + " pegou a bola.");
 
-    emit Repaint(id_, images_.at(2));
-    for (int i = path_to_bucket_.size() - 1; i >= 0; i--) {
-        emit SetPosition(id_, path_to_bucket_.at(i));
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        emit Repaint(id_, images_.at(2));
+        for (int i = path_to_bucket_.size() - 1; i >= 0; i--) {
+            emit SetPosition(id_, path_to_bucket_.at(i));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
 }
 
@@ -109,14 +114,16 @@ void Child::ReturnBall()
     }
 
     bucket_->Push();
-    has_ball_ = false;
+    if (!must_stop_) {
+        has_ball_ = false;
 
-    log_handler_.Log("A criança " + name_ + " devolveu a bola.");
+        log_handler_.Log("A criança " + name_ + " devolveu a bola.");
 
-    emit Repaint(id_, images_.front());
-    for (int i = path_to_bucket_.size() - 1; i >= 0; i--) {
-        emit SetPosition(id_, path_to_bucket_.at(i));
-        std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        emit Repaint(id_, images_.front());
+        for (int i = path_to_bucket_.size() - 1; i >= 0; i--) {
+            emit SetPosition(id_, path_to_bucket_.at(i));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
     }
 }
 

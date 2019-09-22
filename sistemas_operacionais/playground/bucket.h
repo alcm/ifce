@@ -25,6 +25,7 @@ signals:
 private:
    QSemaphore available_positions_sem_;
    QSemaphore available_balls_sem_;
+   std::atomic_bool stop_;
 
    std::mutex mutex_;
 

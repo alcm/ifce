@@ -21,7 +21,6 @@ class Playground;
 class Playground : public QMainWindow
 {
     Q_OBJECT
-
 public:
     Playground(const int bucket_capacity = 0, QWidget *parent = nullptr);
     ~Playground();
@@ -33,6 +32,8 @@ private slots:
     void RepaintBucket(const std::string &img_path);
     void LogMessage(const std::string &msg);
     void ShowAboutPopup();
+    void Exit();
+    void HandleChildThreadFinished(const int id);
 
 private:
     void InstallChildSignals(Child *child);
@@ -48,10 +49,10 @@ private:
     std::mutex child_mutex_;
     std::mutex bucket_mutex_;
 
-    QGraphicsScene scene_;
+    QGraphicsScene *scene_;
     QGraphicsView view_;
     Bucket *bucket_;
-    ThreadPool pool_;
+    ThreadPool *pool_;
     Ui::Playground *ui_;
 };
 

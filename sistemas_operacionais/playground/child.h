@@ -31,6 +31,7 @@ public:
 signals:
     void SetPosition(const int id, const QPoint &point);
     void Repaint(const int id, const std::string &img_path);
+    void Finished(const int id);
 
 private:
     void Play();

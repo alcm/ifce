@@ -226,7 +226,7 @@
      </font>
     </property>
     <property name="title">
-     <string>Ajuda</string>
+     <string>Menu</string>
     </property>
     <addaction name="actionSobre"/>
     <addaction name="actionSair_2"/>
