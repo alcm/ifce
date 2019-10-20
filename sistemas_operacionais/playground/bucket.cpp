@@ -1,3 +1,7 @@
+/**
+ * \file
+ * \brief  Bucket class implementation.
+ */
 #include "bucket.h"
 
 Bucket::Bucket(const uint8_t bucket_capacity)
@@ -15,7 +19,10 @@ Bucket::Bucket(const uint8_t bucket_capacity)
               {7, ":/images/images/bucket_seven_ball.png" }})
 {
     qRegisterMetaType<std::string>("std::string");
-    setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(available_balls_sem_.available()) + " bola(s)"));
+
+    std::string txt("O cesto contém: " + std::to_string(available_balls_sem_.available())
+                    + " bola(s)");
+    setToolTip(QString::fromStdString(txt));
 }
 
 void Bucket::Push()
@@ -23,11 +30,13 @@ void Bucket::Push()
     available_positions_sem_.acquire();
 
     if (!stop_) {
-        setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(available_balls_sem_.available() + 1) + " bola(s)"));
+        std::string txt("O cesto contém: " + std::to_string(available_balls_sem_.available() + 1)
+                        + " bola(s)");
+        setToolTip(QString::fromStdString(txt));
         emit Repaint(imgs_.at(available_balls_sem_.available() + 1));
-    }
 
-    available_balls_sem_.release();
+        available_balls_sem_.release();
+    }
 }
 
 void Bucket::Pull()
@@ -35,11 +44,13 @@ void Bucket::Pull()
     available_balls_sem_.acquire();
 
     if (!stop_) {
-        setToolTip(QString::fromStdString("O cesto contém: " + std::to_string(available_balls_sem_.available()) + " bola(s)"));
+        std::string txt("O cesto contém: " + std::to_string(available_balls_sem_.available())
+                        + " bola(s)");
+        setToolTip(QString::fromStdString(txt));
         emit Repaint(imgs_.at(available_balls_sem_.available()));
-    }
 
-    available_positions_sem_.release();
+        available_positions_sem_.release();
+    }
 }
 
 void Bucket::Destroy()

@@ -1,3 +1,7 @@
+/**
+ * \file
+ * \brief  Child class implementation.
+ */
 #include "child.h"
 
 #include <chrono>

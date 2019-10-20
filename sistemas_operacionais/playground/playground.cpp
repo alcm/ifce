@@ -1,3 +1,7 @@
+/**
+ * \file
+ * \brief  Playground class implementation.
+ */
 #include "playground.h"
 #include "ui_playground.h"
 
@@ -79,20 +83,10 @@ void Playground::InstallChildSignals(Child *child)
                      SLOT(SetChildPosition(const int, const QPoint &)));
     QObject::connect(child, SIGNAL(Repaint(const int, const std::string &)), this,
                      SLOT(RepaintChild(const int, const std::string &)));
-    QObject::connect(child, SIGNAL(Finished(const int)), this, SLOT(HandleChildThreadFinished(const int)));
+    QObject::connect(child, SIGNAL(Finished(const int)), this,
+                     SLOT(HandleChildThreadFinished(const int)));
     QObject::connect(child->log_handler(), SIGNAL(SendMsg(const std::string &)), this,
                      SLOT(LogMessage(const std::string &)));
-}
-
-void Playground::UninstallChildSignals(Child *child)
-{
-    QObject::disconnect(child, SIGNAL(SetPosition(const int, const QPoint &)), this,
-                        SLOT(SetChildPosition(const int, const QPoint &)));
-    QObject::disconnect(child, SIGNAL(Repaint(const int, const std::string &)), this,
-                        SLOT(RepaintChild(const int, const std::string &)));
-    QObject::disconnect(child, SIGNAL(Finished(const int)), this, SLOT(HandleChildThreadFinished(const int)));
-    QObject::disconnect(child->log_handler(), SIGNAL(SendMsg(const std::string &)), this,
-                        SLOT(LogMessage(const std::string &)));
 }
 
 void Playground::OnAddChildButtonClicked()
@@ -101,8 +95,8 @@ void Playground::OnAddChildButtonClicked()
     int play_time = ui_->play_interval_line_edit->text().toInt();
     int quiet_time = ui_->quiet_interval_line_edit->text().toInt();
     int id = static_cast<int>(childs_.size());
-    std::string name = ui_->id_line_edit->text().isEmpty() ? std::to_string(id)
-                                                           : ui_->id_line_edit->text().toStdString();
+    auto name = ui_->id_line_edit->text().isEmpty() ? std::to_string(id)
+                                                    : ui_->id_line_edit->text().toStdString();
 
     if (!quiet_time || !play_time) {
         QMessageBox::warning(this, "Erro", "Preencha os campos corretamente!");
@@ -115,8 +109,6 @@ void Playground::OnAddChildButtonClicked()
 
 void Playground::DrawChild(Child *ch)
 {
-    std::lock_guard<std::mutex> lk(child_mutex_);
-
     auto start_pos = paths_to_bucket_.at(childs_.size()).front();
 
     scene_->addItem(ch);
@@ -126,8 +118,6 @@ void Playground::DrawChild(Child *ch)
 
 void Playground::SetChildPosition(const int id, const QPoint &point)
 {
-    std::lock_guard<std::mutex> lk(child_mutex_);
-
     auto child = childs_.at(id);
     if (child)
         child->setPos(point.x(), point.y());
@@ -135,8 +125,6 @@ void Playground::SetChildPosition(const int id, const QPoint &point)
 
 void Playground::RepaintChild(const int id, const std::string &img_path)
 {
-    std::lock_guard<std::mutex> lk(child_mutex_);
-
     auto child = childs_.at(id);
     if (child)
         child->setPixmap(QPixmap(img_path.c_str()));
@@ -144,8 +132,6 @@ void Playground::RepaintChild(const int id, const std::string &img_path)
 
 void Playground::RepaintBucket(const std::string &img_path)
 {
-    std::lock_guard<std::mutex> lk(bucket_mutex_);
-
     bucket_->setPixmap(QPixmap(QString::fromStdString(img_path)));
 }
 
@@ -180,11 +166,10 @@ void Playground::Exit()
 
 void Playground::HandleChildThreadFinished(const int id)
 {
-    std::lock_guard<std::mutex> lk(child_mutex_);
-
     auto child = childs_.at(id);
     if (child) {
-        QObject::disconnect(child, SIGNAL(Finished(const int)), this, SLOT(HandleChildThreadFinished(const int)));
+        QObject::disconnect(child, SIGNAL(Finished(const int)), this,
+                            SLOT(HandleChildThreadFinished(const int)));
         childs_.erase(id);
     }
 
@@ -194,21 +179,22 @@ void Playground::HandleChildThreadFinished(const int id)
 
 void Playground::ShowAboutPopup()
 {
-    std::string text = "Trabalho de Sistemas operacionais\n\nImagine N crianças que estão, a princípio, quietas."
-                       " M (M < N) crianças inicialmente possuem uma bola e as outras, não. De "
-                       "repente, sentem vontade de brincar com uma bola. Com esse desejo "
-                       "incontrolável, as que já estão com a bola simplesmente brincam. As que não "
-                       " têm bola correm ao cesto de bolas, que está inicialmente vazio e que suporta"
-                       " até K bolas. Se o cesto possuir bolas, uma criança pega a bola e vai brincar"
-                       " feliz. Se o cesto estiver vazio, ela fica esperando até que outra criança "
-                       " coloque uma bola no cesto. Quando uma criança termina de brincar, ela tem "
-                       "que colocar a bola no cesto, mas se o cesto já estiver cheio, ela segura a "
-                       "bola até que outra criança retire uma bola que já está no cesto, e então "
-                       "solta sua bola no cesto e volta a ficar quieta. Admita que as crianças "
-                       "continuem brincando e descansando (quieta) eternamente. Utilizando semáforos,"
-                       " modele esse problema problema resolvendo os conflitos entre os N threads "
-                       "\"criança\".\n\nAluno: André Luis Carvalho Moreira\nDisponível em: "
-                       " github.com/carvalhudo/ifce/tree/sistemas_operacionais/sistemas_operacionais/playground";
+    std::string text = "Trabalho de Sistemas operacionais\n\nImagine N crianças que estão, a"
+                       "princípio, quietas. M (M < N) crianças inicialmente possuem uma bola e as "
+                       "outras, não. De repente, sentem vontade de brincar com uma bola. Com esse "
+                       "desejo incontrolável, as que já estão com a bola simplesmente brincam. As "
+                       "que não têm bola correm ao cesto de bolas, que está inicialmente vazio e "
+                       "que suporta até K bolas. Se o cesto possuir bolas, uma criança pega a bola "
+                       "e vai brincar feliz. Se o cesto estiver vazio, ela fica esperando até que "
+                       "outra criança coloque uma bola no cesto. Quando uma criança termina de "
+                       "brincar, ela tem que colocar a bola no cesto, mas se o cesto já estiver "
+                       "cheio, ela segura a bola até que outra criança retire uma bola que já está "
+                       "no cesto, e então solta sua bola no cesto e volta a ficar quieta. Admita "
+                       "que as crianças continuem brincando e descansando (quieta) eternamente. "
+                       "Utilizando semáforos, modele esse problema problema resolvendo os conflitos "
+                       "entre os N threads \"criança\".\n\nAluno: André Luis Carvalho Moreira\n"
+                       "Disponível em: github.com/carvalhudo/ifce/tree/sistemas_operacionais/"
+                       "sistemas_operacionais/playground";
 
     QMessageBox::information(this, "Sobre", QString::fromStdString(text));
 }

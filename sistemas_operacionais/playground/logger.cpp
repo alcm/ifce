@@ -1,3 +1,7 @@
+/**
+ * \file
+ * \brief  Logger class implementation.
+ */
 #include "logger.h"
 
 #include <ctime>
