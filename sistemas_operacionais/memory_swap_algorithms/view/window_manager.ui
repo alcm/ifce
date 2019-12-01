@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WindowManager</class>
+ <widget class="QMainWindow" name="WindowManager">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1189</width>
+    <height>786</height>
+   </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>447</width>
+    <height>350</height>
+   </size>
+  </property>
+  <property name="windowTitle">
+   <string>SO2</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <property name="styleSheet">
+    <string notr="true">QWidget#centralWidget{
+border: 1px solid #434343;
+margin-top: 32px;
+border-top-left-radius: 25px;
+background-color: black;
+}</string>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <widget class="QStackedWidget" name="stacked_widget">
+      <property name="styleSheet">
+       <string notr="true"/>
+      </property>
+      <property name="currentIndex">
+       <number>0</number>
+      </property>
+      <widget class="QWidget" name="devices_page">
+       <layout class="QVBoxLayout" name="verticalLayout_3">
+        <property name="bottomMargin">
+         <number>9</number>
+        </property>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="execution_screen">
+       <layout class="QVBoxLayout" name="verticalLayout_6"/>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1189</width>
+     <height>20</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuMenu">
+    <property name="title">
+     <string>Menu</string>
+    </property>
+    <addaction name="actionSobre"/>
+    <addaction name="separator"/>
+    <addaction name="actionSair"/>
+   </widget>
+   <addaction name="menuMenu"/>
+  </widget>
+  <action name="actionSobre">
+   <property name="text">
+    <string>Sobre</string>
+   </property>
+  </action>
+  <action name="actionSair">
+   <property name="text">
+    <string>Sair</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
