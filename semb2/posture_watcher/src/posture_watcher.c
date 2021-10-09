@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <string.h>
 
 #include "adxl345.h"
@@ -6,10 +7,10 @@
 
 #define DEBUG   1
 
-bool posture_is_correct(const float * angles) 
+bool posture_is_correct(const float * angles)
 {
   const float ideal_xyz[3] = {175.0, 88.0, 88.0}; // TODO: check these values...
-  
+
   return !((fabsf(angles[0] - ideal_xyz[0]) >= 15.0) ||
            (fabsf(angles[1] - ideal_xyz[1]) >= 15.0) ||
            (fabsf(angles[2] - ideal_xyz[2]) >= 10.0));
@@ -33,7 +34,7 @@ void run_application(void)
 
 #if (DEBUG == 1)
     char logger_msg[255];
-    
+
     sprintf(logger_msg, "[LOG] (x/y/z): (%f/%f/%f) deg\n", xyz_angles[0], xyz_angles[1], xyz_angles[2]);
     uart_logger(logger_msg);
 #endif
@@ -47,11 +48,11 @@ void run_application(void)
   }
 }
 
-int main(void) 
+int main(void)
 {
-  sys_config(); 
+  sys_config();
   uart_logger("[LOG] Starting the application...\n");
   run_application();
-  
+
   return 1; // normally never reached...
 }
