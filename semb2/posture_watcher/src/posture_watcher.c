@@ -4,6 +4,7 @@
 #include "adxl345.h"
 #include "hardware.h"
 #include "posture_watcher.h"
+#include "uart_logger.h"
 
 #define DEBUG   1
 

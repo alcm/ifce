@@ -1,5 +1,5 @@
 /**
- * \brief This file contains all implementations related to hardware peripherals configuration.
+ * @brief This file contains all implementations related to hardware peripherals configuration.
  */
 #ifndef HARDWARE_H_
 #define HARDWARE_H_
@@ -21,8 +21,8 @@
 #define LED_ON()              (PORTD |= (1 << LED_PIN))
 
 /**
- * \brief configures all hardware peripherals.
+ * @brief configures all hardware peripherals.
  */
-inline void sys_config(void);
+void sys_config(void);
 
 #endif // HARDWARE_H_
